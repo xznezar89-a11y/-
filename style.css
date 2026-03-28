@@ -1,0 +1,597 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap');
+
+:root {
+    --bg-color: #0d0d12;
+    --text-primary: #ffffff;
+    --text-secondary: #a0a0b0;
+    --primary-color: #6c5ce7;
+    --primary-hover: #5b4bc4;
+    --danger-color: #ff7675;
+    --danger-hover: #d63031;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    --border-radius: 16px;
+    --transition: 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Light Mode Overrides */
+body.light-mode {
+    --bg-color: #f4f6fa;
+    --text-primary: #121212;
+    --text-secondary: #4a4a5a;
+    --glass-bg: rgba(255, 255, 255, 0.5);
+    --glass-border: rgba(0, 0, 0, 0.05);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Tajawal', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    position: relative;
+    scroll-behavior: smooth;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-color); }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.1); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: var(--primary-color); }
+
+/* خلفية متدرجة متحركة لإبراز التأثير الزجاجي */
+body::before, body::after {
+    content: '';
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: -1;
+    animation: float 15s infinite alternate ease-in-out;
+}
+
+body::before {
+    width: 400px;
+    height: 400px;
+    background: rgba(108, 92, 231, 0.15);
+    top: -10%;
+    left: -10%;
+}
+
+body::after {
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 118, 117, 0.1);
+    bottom: -10%;
+    right: -10%;
+    animation-delay: -5s;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+a { text-decoration: none; color: inherit; }
+
+/* Header */
+header {
+    background: rgba(13, 13, 18, 0.5);
+    backdrop-filter: blur(30px) saturate(150%);
+    -webkit-backdrop-filter: blur(30px) saturate(150%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    padding: 15px 5%;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(45deg, #ffffff, #a29bfe);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 1px;
+}
+
+/* Hamburger Menu Always On / Sidebar */
+.menu-btn { 
+    display: flex; 
+    flex-direction: column; 
+    cursor: pointer; 
+    z-index: 1100; /* Above sidebar */
+}
+.menu-btn span { 
+    width: 28px; height: 3px; 
+    background-color: var(--text-primary); 
+    margin: 4px 0; 
+    transition: 0.3s; 
+    border-radius: 2px;
+}
+
+nav.nav-links {
+    position: fixed;
+    top: 0;
+    right: -320px;
+    width: 300px;
+    height: 100vh;
+    background: rgba(13, 13, 18, 0.85);
+    backdrop-filter: blur(40px);
+    -webkit-backdrop-filter: blur(40px);
+    border-left: 1px solid var(--glass-border);
+    box-shadow: -5px 0 25px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    padding-top: 100px;
+    transition: right 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    z-index: 1000;
+}
+body.light-mode nav.nav-links {
+    background: rgba(255, 255, 255, 0.85);
+}
+
+nav.nav-links.active {
+    right: 0;
+}
+
+nav a {
+    margin: 10px 20px;
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    transition: all 0.3s ease;
+    display: block;
+}
+
+nav a.active {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--primary-color);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transform: scale(1.02);
+}
+
+body.light-mode nav a.active {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+nav a:hover:not(.active) {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+    transform: translateX(-5px);
+}
+body.light-mode nav a:hover:not(.active) { background: rgba(0, 0, 0, 0.03); }
+
+/* Review Form */
+.review-form-container {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    padding: 30px;
+    max-width: 600px;
+    margin: 40px auto;
+    box-shadow: var(--glass-shadow);
+}
+
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse; /* For RTL logic in standard star hover but we will use JS */
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+.star-rating .star:hover,
+.star-rating .star.active {
+    color: #f1c40f;
+}
+.theme-toggle {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--text-primary);
+    transition: var(--transition);
+    box-shadow: var(--glass-shadow);
+}
+.theme-toggle:hover {
+    transform: rotate(30deg) scale(1.1);
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+    flex-grow: 1;
+}
+
+.page-title {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 0 15px rgba(108, 92, 231, 0.5);
+}
+
+/* Scroll Animations */
+.fade-in {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.fade-in.appear {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Glassmorphism Products Grid */
+.products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 35px;
+}
+
+.product-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--glass-border);
+    overflow: hidden;
+    box-shadow: var(--glass-shadow);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+}
+
+.product-card:hover {
+    transform: translateY(-12px) scale(1.02);
+    box-shadow: 0 15px 40px rgba(108, 92, 231, 0.2);
+    border-color: rgba(108, 92, 231, 0.3);
+}
+
+.product-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.product-info {
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.product-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+}
+
+.product-desc {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.product-price {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+/* Trust Badges - تحفيز الزبون */
+.trust-badges {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin: 40px auto;
+    padding: 30px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+}
+
+.trust-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.trust-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(108, 92, 231, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-color);
+}
+
+/* Buttons */
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(45deg, var(--primary-color), var(--primary-hover));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition);
+    font-family: inherit;
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(108, 92, 231, 0.5);
+    filter: brightness(1.1);
+}
+
+.btn-danger {
+    padding: 8px 15px;
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+/* Social Buttons - Glassmorphism */
+.social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 15px 30px;
+    border-radius: 16px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: white;
+    transition: var(--transition);
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+}
+
+.icon { width: 24px; height: 24px; fill: white; transition: 0.3s; }
+
+.btn-whatsapp:hover { 
+    background: rgba(37, 211, 102, 0.15); 
+    border-color: rgba(37, 211, 102, 0.4); 
+    transform: translateY(-5px); 
+    box-shadow: 0 10px 30px rgba(37, 211, 102, 0.2); 
+    color: #25D366;
+}
+.btn-whatsapp:hover .icon { fill: #25D366; }
+
+.btn-instagram:hover { 
+    background: rgba(220, 39, 67, 0.15); 
+    border-color: rgba(220, 39, 67, 0.4); 
+    transform: translateY(-5px); 
+    box-shadow: 0 10px 30px rgba(220, 39, 67, 0.2); 
+    color: #f09433;
+}
+.btn-instagram:hover .icon { fill: #dc2743; }
+
+/* Admin and Forms Glassmorphism */
+.admin-layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+}
+
+@media (max-width: 900px) { .admin-layout { grid-template-columns: 1fr; } }
+
+.add-product-section, .products-list-section {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--glass-shadow);
+}
+
+.input-group label { color: var(--text-secondary); margin-bottom: 8px; display: block; }
+.input-group input {
+    width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.2);
+    border: 1px solid var(--glass-border); border-radius: 10px; color: white; margin-bottom: 20px;
+    outline: none; transition: 0.3s;
+}
+.input-group input:focus { border-color: var(--primary-color); }
+
+/* (Hamburger removed from here because it's always on now) */
+
+/* Empty State */
+.empty-state { text-align: center; padding: 50px; background: var(--glass-bg); border-radius: var(--border-radius); color: var(--text-secondary); border: 1px dashed var(--glass-border); }
+
+/* Footer styles */
+.site-footer {
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid var(--glass-border);
+    padding: 30px 20px 10px;
+    margin-top: 50px;
+    text-align: center;
+}
+body.light-mode .site-footer { background: rgba(255, 255, 255, 0.5); }
+
+.hidden-login { color: var(--border-color); text-decoration: none; font-size: 10px; cursor: pointer; transition: 0.3s; opacity: 0.1;}
+.hidden-login:hover { color: var(--primary-color); opacity: 1;}
+
+/* Particles Background */
+#particles-js {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    pointer-events: none; /* Allows pressing buttons on top */
+}
+
+/* Custom Cursor Trailer */
+.cursor-follower {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(162, 155, 254, 0.6) 0%, rgba(108, 92, 231, 0) 70%);
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: screen;
+    opacity: 0.8;
+    filter: blur(2px);
+    transition: width 0.2s, height 0.2s, opacity 0.2s;
+}
+
+body.light-mode .cursor-follower {
+    background: radial-gradient(circle, rgba(108, 92, 231, 0.5) 0%, rgba(108, 92, 231, 0) 70%);
+    mix-blend-mode: multiply;
+}
+
+/* Enlarge trailer on clickable items */
+a:hover ~ .cursor-follower, button:hover ~ .cursor-follower {
+    width: 60px;
+    height: 60px;
+    opacity: 1;
+}
+
+/* Testimonials Marquee */
+.testimonials-section {
+    margin: 60px auto;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+    max-width: 1400px;
+}
+
+.testimonials-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    color: var(--text-primary);
+}
+
+.marquee-wrapper {
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.marquee-content {
+    flex-shrink: 0;
+    display: flex;
+    gap: 20px;
+    min-width: 100%;
+    animation: scroll-rtl 30s linear infinite;
+}
+
+.marquee-wrapper:hover .marquee-content {
+    animation-play-state: paused;
+}
+
+@keyframes scroll-rtl {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(100%); } /* In RTL, element flows Right to Left. To scroll left continuously, transform moves positive X */
+}
+
+.review-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    width: 350px;
+    box-shadow: var(--glass-shadow);
+    white-space: normal;
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.reviewer-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), #a29bfe);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.reviewer-info h4 {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    margin-bottom: 3px;
+}
+
+.reviewer-info .stars {
+    color: #f1c40f;
+    font-size: 0.9rem;
+}
+
+.review-card p {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}

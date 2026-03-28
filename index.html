@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>برمج موقعك</title>
+    <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+    <div id="particles-js"></div>
+    <header>
+        <div class="logo">برمج موقعك</div>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <button id="lang-toggle" class="theme-toggle" title="تغيير اللغة" style="font-size: 1rem; font-weight: 700; border-radius: 50%; display: flex; justify-content: center; align-items: center;">🇺🇸</button>
+            <button id="theme-toggle" class="theme-toggle" title="تغيير المظهر">🌙</button>
+            <div class="menu-btn" id="menu-btn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        <nav class="nav-links" id="nav-links">
+            <a href="index.html" class="active">الرئيسية</a>
+            <a href="agents.html">وكلاء الشراء</a>
+            <a href="reviews.html">آراء العملاء</a>
+            <a href="support.html">الدعم الفني</a>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <div class="hero-content fade-in">
+            <h1>أهلاً بك في منصة برمج موقعك</h1>
+            <p>اكتشف أفضل الخدمات والبرمجيات الخاصة بتطوير مواقع الويب</p>
+        </div>
+    </div>
+
+    <main class="container" style="min-height: 400px;">
+        
+        <!-- علامات الثقة والأمان للتحفيز -->
+        <div class="trust-badges fade-in">
+            <div class="trust-item"><div class="trust-icon">🔒</div> أمان وموثوقية 100%</div>
+            <div class="trust-item"><div class="trust-icon">⚡</div> سرعة في التنفيذ</div>
+            <div class="trust-item"><div class="trust-icon">💎</div> جودة متفوقة</div>
+        </div>
+
+        <h2 class="page-title fade-in">أحدث الخدمات</h2>
+        
+        <div id="products-container" class="products-grid">
+            <!-- المنتجات ستظهر هنا من خلال الجافاسكريبت مباشرة -->
+        </div>
+
+        <div id="no-products-msg" class="empty-state" style="display: none;">
+            لا توجد خدمات متاحة حالياً.
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <h3 style="margin-bottom: 15px; color: var(--primary-color);">روابط هامة:</h3>
+            <a href="support.html" style="color: var(--text-primary); text-decoration: underline;">الدعم الفني وطرق التواصل (الشراء)</a>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>جميع الحقوق محفوظة من متجر البرمجة &copy; 2026</p>
+            <a href="login.html" class="hidden-login" title="تسجيل الدخول للإدارة">دخول</a>
+        </div>
+    </footer>
+
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="script.js?v=2"></script>
+</body>
+</html>
