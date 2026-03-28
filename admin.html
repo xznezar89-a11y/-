@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - برمج موقعك</title>
+    <link rel="stylesheet" href="style.css?v=2">
+    
+    <script>
+        // التحقق من الدخول
+        if (sessionStorage.getItem('isAdminLoggedIn') !== 'true') {
+            window.location.href = 'index.html'; 
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="logo">برمج موقعك (الإدارة)</div>
+        <nav>
+            <a href="index.html" target="_blank">رؤية الموقع</a>
+            <a href="#" onclick="logout(); return false;">تسجيل الخروج</a>
+        </nav>
+    </header>
+
+    <main class="container admin-layout">
+        <section class="add-product-section">
+            <h2>إضافة أو تعديل خدمة</h2>
+            <form id="add-product-form">
+                <input type="hidden" id="edit-id" value="">
+                
+                <div class="input-group">
+                    <label for="product-name">اسم المشروغ / الخدمة</label>
+                    <input type="text" id="product-name" required placeholder="أدخل الاسم">
+                </div>
+                
+                <div class="input-group">
+                    <label for="product-desc">وصف الخدمة</label>
+                    <input type="text" id="product-desc" required placeholder="اكتب وصفاً قصيراً للخدمة">
+                </div>
+                
+                <div class="input-group">
+                    <label for="product-price">المبلغ ($)</label>
+                    <input type="number" id="product-price" step="0.01" required placeholder="99.99">
+                </div>
+                
+                <button type="submit" id="submit-btn" class="btn-primary">حفظ ونشر فوراً في الموقع</button>
+            </form>
+        </section>
+
+        <section class="products-list-section">
+            <h2>الخدمات المنشورة حالياً</h2>
+            <div id="admin-products-list" class="admin-products">
+                <!-- قائمة المنتجات للادمن ستظهر هنا -->
+            </div>
+            
+            <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center;">
+                <h3 style="margin-bottom: 15px; color: var(--primary-color);">تثبيت المنتجات في الموقع للجميع (قبل الرفع للمضيف)</h3>
+                <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 15px;">بما أن الموقع يعمل بدون قاعدة بيانات، فالمنتجات محفوظة في متصفحك فقط الآن. قم بالضغط على الزر أدناه لتوليد كود منتجاتك الحالي، وانسخه وأرسله لي في المحادثة لأقوم بتثبيته بشكل دائم في الموقع للجميع.</p>
+                <button onclick="exportProductsData()" class="btn-primary" style="background-color: #27ae60;">توليد كود المنتجات لنشره</button>
+                <textarea id="export-data" style="display:none; width: 100%; height: 150px; margin-top: 15px; background: rgba(0,0,0,0.5); color: #fff; padding: 10px; border-radius: 8px; border: 1px solid #444;" readonly></textarea>
+                <button id="copy-export-btn" onclick="copyExportData()" class="btn-primary" style="margin-top: 10px; display: none;">نسخ الكود</button>
+            </div>
+
+            <div id="admin-no-products" class="empty-state" style="display: none; margin-top: 30px;">
+                لا توجد خدمات منشورة حتى الآن.
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const STORAGE_KEY = 'ecommerce_products'; // نفس المفتاح بالموقع الرئيسي لينشر تلقائياً
+
+        function getProducts() {
+            const list = localStorage.getItem(STORAGE_KEY);
+            return list ? JSON.parse(list) : [];
+        }
+
+        function saveProducts(list) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+        }
+
+        function logout() {
+            sessionStorage.removeItem('isAdminLoggedIn');
+            window.location.href = 'index.html';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('add-product-form');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const editId = document.getElementById('edit-id').value;
+                const name = document.getElementById('product-name').value;
+                const desc = document.getElementById('product-desc').value;
+                const price = document.getElementById('product-price').value;
+                
+                let products = getProducts();
+
+                if (editId) {
+                    // وضع التعديل
+                    const index = products.findIndex(p => p.id === editId);
+                    if (index !== -1) {
+                        products[index].name = name;
+                        products[index].description = desc;
+                        products[index].price = price;
+                    }
+                    document.getElementById('submit-btn').innerText = 'حفظ ونشر فوراً في الموقع';
+                    document.getElementById('edit-id').value = '';
+                    alert('تم تعديل الخدمة بنجاح!');
+                } else {
+                    const newProduct = {
+                        id: Date.now().toString(),
+                        name: name,
+                        description: desc,
+                        price: price,
+                        image: '' // No image selected now
+                    };
+                    products.push(newProduct);
+                    alert('تم نشر الخدمة بنجاح!');
+                }
+                
+                saveProducts(products);
+                
+                form.reset();
+                renderAdminProducts();
+            });
+
+            renderAdminProducts();
+        });
+
+        function renderAdminProducts() {
+            const list = document.getElementById('admin-products-list');
+            const emptyMsg = document.getElementById('admin-no-products');
+            const products = getProducts();
+            list.innerHTML = '';
+
+            if (products.length === 0) {
+                emptyMsg.style.display = 'block';
+            } else {
+                emptyMsg.style.display = 'none';
+                products.forEach(product => {
+                    const item = document.createElement('div');
+                    item.className = 'admin-product-item';
+                    const displayImg = product.image || 'https://via.placeholder.com/150/6c5ce7/ffffff?text=Service';
+                    item.innerHTML = `
+                        <img src="${displayImg}" alt="${product.name}" class="admin-product-img">
+                        <div class="admin-product-details">
+                            <h3>${product.name}</h3>
+                            <p style="font-size: 0.85rem; color: #777;">${product.description || ''}</p>
+                            <p style="color: var(--primary-color);">$${Number(product.price).toFixed(2)}</p>
+                        </div>
+                        <div style="display:flex; flex-direction:column; gap:5px;">
+                            <button class="btn-primary" style="padding:4px 10px; font-size:12px;" onclick="editProduct('${product.id}')">تعديل</button>
+                            <button class="btn-danger" style="padding:4px 10px; font-size:12px;" onclick="deleteProduct('${product.id}')">حذف</button>
+                        </div>
+                    `;
+                    list.appendChild(item);
+                });
+            }
+        }
+
+        window.editProduct = function(id) {
+            const products = getProducts();
+            const product = products.find(p => p.id === id);
+            if (product) {
+                document.getElementById('edit-id').value = product.id;
+                document.getElementById('product-name').value = product.name;
+                document.getElementById('product-desc').value = product.description || '';
+                document.getElementById('product-price').value = product.price;
+                
+                // تغيير زر الإرسال
+                document.getElementById('submit-btn').innerText = 'تحديث التعديلات';
+                
+                window.scrollTo(0, 0); // الصعود لأعلى الفورم
+            }
+        }
+
+        window.deleteProduct = function(id) {
+            if (confirm('هل أنت متأكد من الحذف؟ سيتم إزالته من الموقع فوراً.')) {
+                let products = getProducts();
+                products = products.filter(product => product.id !== id);
+                saveProducts(products);
+                renderAdminProducts();
+            }
+        }
+
+        window.exportProductsData = function() {
+            const products = getProducts();
+            if (products.length === 0) {
+                alert("لا يوجد منتجات لتصديرها!");
+                return;
+            }
+            const dataStr = JSON.stringify(products, null, 2);
+            const textarea = document.getElementById('export-data');
+            textarea.value = `const defaultProducts = ${dataStr};`;
+            textarea.style.display = 'block';
+            document.getElementById('copy-export-btn').style.display = 'inline-block';
+            alert("تم توليد بيانات المنتجات بالأسفل. قم بنسخها وإرسالها للمساعد الذكي ليزرعها في الموقع.");
+        }
+
+        window.copyExportData = function() {
+            const textarea = document.getElementById('export-data');
+            textarea.select();
+            document.execCommand('copy');
+            alert("تم نسخ كود المنتجات! يمكنك الآن إرساله لي.");
+        }
+    </script>
+</body>
+</html>
