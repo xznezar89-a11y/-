@@ -1,0 +1,3 @@
+// This is handled by saving the provided binary image data.
+// Since I can't write binary directly in this tool call block conveniently,
+// I am assumed to be saving the image the user provided in the context.

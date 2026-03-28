@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - برمج موقعك</title>
+    <link rel="stylesheet" href="style.css?v=2">
+</head>
+<body>
+    <header>
+        <div class="logo">برمج موقعك</div>
+        <nav>
+            <a href="index.html">الرئيسية</a>
+            <a href="login.html" class="active">دخول</a>
+        </nav>
+    </header>
+
+    <main class="container" style="max-width: 500px; margin-top: 80px;">
+        <div class="add-product-section">
+            <h2 style="text-align: center;">تسجيل الدخول للإدارة</h2>
+            <form id="login-form">
+                <div class="input-group">
+                    <label for="admin-email">البريد الإلكتروني</label>
+                    <input type="email" id="admin-email" required placeholder="xznezar89@gmail.com">
+                </div>
+                <div class="input-group">
+                    <label for="admin-password">كلمة المرور</label>
+                    <input type="password" id="admin-password" required placeholder="********">
+                </div>
+                <!-- رسالة الخطأ -->
+                <div id="login-error" style="color: var(--danger-color); text-align: center; margin-bottom: 15px; display: none;">
+                    بيانات الدخول غير صحيحة!
+                </div>
+                <button type="submit" class="btn-primary">دخول</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('admin-email').value;
+            const password = document.getElementById('admin-password').value;
+            const errorMsg = document.getElementById('login-error');
+
+            // بيانات الدخول الخاصة بك
+            if (email === 'xznezar89@gmail.com' && password === 'nn09303nn') {
+                // حفظ التفويض مؤقتاً في جلسة المتصفح
+                sessionStorage.setItem('isAdminLoggedIn', 'true');
+                window.location.href = 'admin.html';
+            } else {
+                errorMsg.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
